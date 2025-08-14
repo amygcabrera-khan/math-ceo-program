@@ -1,0 +1,725 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Data Science Explorers - Fallbrook x UCI</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .header {
+            text-align: center;
+            padding: 40px 0;
+            color: white;
+            margin-bottom: 40px;
+        }
+
+        .header h1 {
+            font-size: 3.5rem;
+            margin-bottom: 20px;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+            background: linear-gradient(45deg, #FFD700, #FF6B35, #F7931E);
+            background-clip: text;
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+        }
+
+        .header .tagline {
+            font-size: 1.3rem;
+            opacity: 0.9;
+            margin-bottom: 30px;
+        }
+
+        .nav-tabs {
+            display: flex;
+            justify-content: center;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .nav-tab {
+            padding: 15px 25px;
+            background: rgba(255,255,255,0.1);
+            color: white;
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(10px);
+            border: 2px solid transparent;
+        }
+
+        .nav-tab:hover, .nav-tab.active {
+            background: rgba(255,255,255,0.2);
+            border-color: rgba(255,255,255,0.3);
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.2);
+        }
+
+        .content-section {
+            display: none;
+            animation: fadeIn 0.5s ease-in;
+        }
+
+        .content-section.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(20px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .curriculum-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+
+        .module-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+            transition: all 0.3s ease;
+            border: 1px solid rgba(255,255,255,0.2);
+        }
+
+        .module-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 30px 60px rgba(0,0,0,0.2);
+        }
+
+        .module-header {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .module-icon {
+            width: 60px;
+            height: 60px;
+            border-radius: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            margin-right: 20px;
+            color: white;
+        }
+
+        .module-title {
+            font-size: 1.4rem;
+            font-weight: 700;
+            color: #333;
+        }
+
+        .module-subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            margin-top: 5px;
+        }
+
+        .module-description {
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 20px;
+        }
+
+        .skills-tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .skill-tag {
+            background: linear-gradient(45deg, #FF6B35, #F7931E);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 600;
+        }
+
+        .activity-list {
+            list-style: none;
+        }
+
+        .activity-list li {
+            margin-bottom: 10px;
+            padding-left: 20px;
+            position: relative;
+            color: #555;
+        }
+
+        .activity-list li::before {
+            content: "🎯";
+            position: absolute;
+            left: 0;
+        }
+
+        .chat-section {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .chat-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .chat-header h2 {
+            color: #333;
+            margin-bottom: 10px;
+        }
+
+        .chat-rooms {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+        }
+
+        .chat-room {
+            background: linear-gradient(135deg, #667eea, #764ba2);
+            color: white;
+            padding: 20px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .chat-room:hover {
+            transform: scale(1.05);
+        }
+
+        .progress-tracker {
+            background: rgba(255,255,255,0.95);
+            border-radius: 20px;
+            padding: 30px;
+            margin-bottom: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+
+        .progress-bar {
+            background: #E5E5E5;
+            border-radius: 25px;
+            height: 20px;
+            margin: 20px 0;
+            overflow: hidden;
+        }
+
+        .progress-fill {
+            background: linear-gradient(90deg, #FF6B35, #F7931E);
+            height: 100%;
+            border-radius: 25px;
+            transition: width 0.3s ease;
+        }
+
+        .team-building {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 20px;
+        }
+
+        .team-activity {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 25px;
+            text-align: center;
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .team-activity:hover {
+            transform: translateY(-5px);
+        }
+
+        .resources-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+        }
+
+        .resource-card {
+            background: rgba(255,255,255,0.95);
+            border-radius: 15px;
+            padding: 25px;
+            box-shadow: 0 15px 30px rgba(0,0,0,0.1);
+            transition: transform 0.3s ease;
+        }
+
+        .resource-card:hover {
+            transform: translateY(-8px);
+        }
+
+        .btn-primary {
+            background: linear-gradient(45deg, #FF6B35, #F7931E);
+            color: white;
+            padding: 12px 25px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            margin-top: 15px;
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 20px rgba(255, 107, 53, 0.3);
+        }
+
+        .schedule-info {
+            background: rgba(255,255,255,0.1);
+            border-radius: 15px;
+            padding: 20px;
+            margin-bottom: 30px;
+            color: white;
+            text-align: center;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2.5rem;
+            }
+            
+            .curriculum-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .nav-tabs {
+                flex-direction: column;
+                align-items: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header class="header">
+            <h1>🚀 Data Science Explorers</h1>
+            <p class="tagline">Where Fallbrook High meets UCI Innovation | Tuesdays 3:45-5:00 PM</p>
+            <div class="schedule-info">
+                <strong>📅 Program Timeline:</strong> Following school calendars - check your mentor for specific dates!
+            </div>
+        </header>
+
+        <nav class="nav-tabs">
+            <button class="nav-tab active" onclick="showSection('curriculum')">🎯 Curriculum</button>
+            <button class="nav-tab" onclick="showSection('community')">💬 Community</button>
+            <button class="nav-tab" onclick="showSection('progress')">📈 Progress</button>
+            <button class="nav-tab" onclick="showSection('resources')">🛠️ Resources</button>
+            <button class="nav-tab" onclick="showSection('teambuilding')">🤝 Team Building</button>
+        </nav>
+
+        <!-- Curriculum Section -->
+        <div id="curriculum" class="content-section active">
+            <div class="curriculum-grid">
+                <!-- Module 1: Fermi Estimation & Critical Thinking -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon" style="background: linear-gradient(45deg, #FF6B35, #F7931E);">🤔</div>
+                        <div>
+                            <h3 class="module-title">Fermi & Critical Thinking</h3>
+                            <p class="module-subtitle">Week 1-2 | Foundation Building</p>
+                        </div>
+                    </div>
+                    <p class="module-description">
+                        Start with mind-bending questions: "How many smartphones are in use right now?" Learn to break impossible problems into manageable pieces and build estimation superpowers.
+                    </p>
+                    <div class="skills-tags">
+                        <span class="skill-tag">Problem Decomposition</span>
+                        <span class="skill-tag">Order of Magnitude</span>
+                        <span class="skill-tag">Logical Reasoning</span>
+                    </div>
+                    <ul class="activity-list">
+                        <li>Estimate pizza delivery times in your neighborhood</li>
+                        <li>Calculate TikTok's daily video uploads</li>
+                        <li>Predict voting patterns in your community</li>
+                        <li>Team challenge: Most creative estimation method</li>
+                    </ul>
+                </div>
+
+                <!-- Module 2: Data Collection & Community Issues -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon" style="background: linear-gradient(45deg, #667eea, #764ba2);">📊</div>
+                        <div>
+                            <h3 class="module-title">Community Data Detective</h3>
+                            <p class="module-subtitle">Week 3-4 | Data Collection</p>
+                        </div>
+                    </div>
+                    <p class="module-description">
+                        Become data detectives in your own community! Investigate issues that matter to you: school lunch quality, transportation access, local environmental concerns.
+                    </p>
+                    <div class="skills-tags">
+                        <span class="skill-tag">Survey Design</span>
+                        <span class="skill-tag">Data Collection</span>
+                        <span class="skill-tag">Sampling</span>
+                        <span class="skill-tag">Ethics</span>
+                    </div>
+                    <ul class="activity-list">
+                        <li>Design surveys about issues you care about</li>
+                        <li>Interview community members</li>
+                        <li>Collect data from public sources</li>
+                        <li>Learn about bias and fair representation</li>
+                    </ul>
+                </div>
+
+                <!-- Module 3: Intro to Coding & Visualization -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon" style="background: linear-gradient(45deg, #11998e, #38ef7d);">💻</div>
+                        <div>
+                            <h3 class="module-title">Code Your First Insights</h3>
+                            <p class="module-subtitle">Week 5-7 | R/Python in Posit Cloud</p>
+                        </div>
+                    </div>
+                    <p class="module-description">
+                        No prior coding experience? No problem! Start with fun, visual projects that turn your data into compelling stories everyone can understand.
+                    </p>
+                    <div class="skills-tags">
+                        <span class="skill-tag">R/Python Basics</span>
+                        <span class="skill-tag">Data Visualization</span>
+                        <span class="skill-tag">Posit Cloud</span>
+                        <span class="skill-tag">Storytelling</span>
+                    </div>
+                    <ul class="activity-list">
+                        <li>Create your first data visualization</li>
+                        <li>Build interactive charts about your community</li>
+                        <li>Learn to clean and organize messy data</li>
+                        <li>Share findings with your team</li>
+                    </ul>
+                </div>
+
+                <!-- Module 4: Statistical Thinking -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon" style="background: linear-gradient(45deg, #fa709a, #fee140);">📈</div>
+                        <div>
+                            <h3 class="module-title">Patterns & Predictions</h3>
+                            <p class="module-subtitle">Week 8-10 | Statistical Analysis</p>
+                        </div>
+                    </div>
+                    <p class="module-description">
+                        Discover the hidden patterns in your data! Learn when correlation doesn't mean causation and how to make predictions about the future.
+                    </p>
+                    <div class="skills-tags">
+                        <span class="skill-tag">Correlation vs Causation</span>
+                        <span class="skill-tag">Statistical Significance</span>
+                        <span class="skill-tag">Hypothesis Testing</span>
+                        <span class="skill-tag">Confidence Intervals</span>
+                    </div>
+                    <ul class="activity-list">
+                        <li>Analyze relationships in your community data</li>
+                        <li>Test hypotheses about local issues</li>
+                        <li>Learn to spot misleading statistics</li>
+                        <li>Present findings to your peers</li>
+                    </ul>
+                </div>
+
+                <!-- Module 5: Modeling & Predictions -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon" style="background: linear-gradient(45deg, #a8edea, #fed6e3);">🎯</div>
+                        <div>
+                            <h3 class="module-title">Build Your First Model</h3>
+                            <p class="module-subtitle">Week 11-13 | Mathematical Modeling</p>
+                        </div>
+                    </div>
+                    <p class="module-description">
+                        Time to build models that can predict the future! Use linear algebra and calculus concepts to create mathematical models of real-world phenomena.
+                    </p>
+                    <div class="skills-tags">
+                        <span class="skill-tag">Linear Regression</span>
+                        <span class="skill-tag">Basic Linear Algebra</span>
+                        <span class="skill-tag">Optimization</span>
+                        <span class="skill-tag">Model Validation</span>
+                    </div>
+                    <ul class="activity-list">
+                        <li>Predict trends in your community data</li>
+                        <li>Build models to solve local problems</li>
+                        <li>Learn about model limitations and ethics</li>
+                        <li>Compare different modeling approaches</li>
+                    </ul>
+                </div>
+
+                <!-- Module 6: Civic Action Project -->
+                <div class="module-card">
+                    <div class="module-header">
+                        <div class="module-icon" style="background: linear-gradient(45deg, #ff9a9e, #fecfef);">🌟</div>
+                        <div>
+                            <h3 class="module-title">Data for Change</h3>
+                            <p class="module-subtitle">Week 14-16 | Capstone Project</p>
+                        </div>
+                    </div>
+                    <p class="module-description">
+                        Put it all together! Work in teams to tackle a real community issue using everything you've learned. Present your solutions to local leaders and community members.
+                    </p>
+                    <div class="skills-tags">
+                        <span class="skill-tag">Project Management</span>
+                        <span class="skill-tag">Public Speaking</span>
+                        <span class="skill-tag">Policy Recommendations</span>
+                        <span class="skill-tag">Impact Measurement</span>
+                    </div>
+                    <ul class="activity-list">
+                        <li>Choose a community issue to address</li>
+                        <li>Conduct comprehensive data analysis</li>
+                        <li>Create actionable recommendations</li>
+                        <li>Present to community stakeholders</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Community Section -->
+        <div id="community" class="content-section">
+            <div class="chat-section">
+                <div class="chat-header">
+                    <h2>💬 Connect & Collaborate</h2>
+                    <p>Build relationships that last beyond the program!</p>
+                </div>
+                <div class="chat-rooms">
+                    <div class="chat-room">
+                        <h3>🎯 Study Groups</h3>
+                        <p>Form study groups, ask questions, share insights</p>
+                    </div>
+                    <div class="chat-room">
+                        <h3>💡 Project Teams</h3>
+                        <p>Collaborate on your civic engagement projects</p>
+                    </div>
+                    <div class="chat-room">
+                        <h3>🎉 Social Hub</h3>
+                        <p>Share wins, memes, and get to know each other</p>
+                    </div>
+                    <div class="chat-room">
+                        <h3>🏆 Showcase</h3>
+                        <p>Show off your amazing data visualizations</p>
+                    </div>
+                    <div class="chat-room">
+                        <h3>📚 Mentor Hours</h3>
+                        <p>Connect with UCI mentors for extra help</p>
+                    </div>
+                    <div class="chat-room">
+                        <h3>🌟 Career Corner</h3>
+                        <p>Explore STEM careers and college pathways</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Progress Section -->
+        <div id="progress" class="content-section">
+            <div class="progress-tracker">
+                <h2>📈 Your Learning Journey</h2>
+                <p>Track your progress through the Data Science Explorer pathway!</p>
+                
+                <div style="margin: 30px 0;">
+                    <h4>Overall Program Progress</h4>
+                    <div class="progress-bar">
+                        <div class="progress-fill" style="width: 35%"></div>
+                    </div>
+                    <p>5 of 16 weeks completed - You're making great progress! 🎉</p>
+                </div>
+
+                <div style="margin: 30px 0;">
+                    <h4>Skills Mastery</h4>
+                    <div style="margin: 15px 0;">
+                        <strong>Critical Thinking & Fermi Estimation</strong>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 80%"></div>
+                        </div>
+                    </div>
+                    <div style="margin: 15px 0;">
+                        <strong>Data Collection & Ethics</strong>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 65%"></div>
+                        </div>
+                    </div>
+                    <div style="margin: 15px 0;">
+                        <strong>Coding & Visualization</strong>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 40%"></div>
+                        </div>
+                    </div>
+                    <div style="margin: 15px 0;">
+                        <strong>Statistical Analysis</strong>
+                        <div class="progress-bar">
+                            <div class="progress-fill" style="width: 20%"></div>
+                        </div>
+                    </div>
+                </div>
+
+                <div style="margin-top: 30px;">
+                    <h4>🏆 Achievements Unlocked</h4>
+                    <div style="display: flex; flex-wrap: wrap; gap: 15px; margin-top: 15px;">
+                        <div style="background: #FFD700; padding: 10px 15px; border-radius: 25px; color: #333;">
+                            🎯 Fermi Master
+                        </div>
+                        <div style="background: #FF6B35; color: white; padding: 10px 15px; border-radius: 25px;">
+                            📊 Data Collector
+                        </div>
+                        <div style="background: #11998e; color: white; padding: 10px 15px; border-radius: 25px;">
+                            💻 First Visualization
+                        </div>
+                        <div style="background: #E5E5E5; color: #999; padding: 10px 15px; border-radius: 25px;">
+                            📈 Pattern Finder (Locked)
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Resources Section -->
+        <div id="resources" class="content-section">
+            <div class="resources-grid">
+                <div class="resource-card">
+                    <h3>🔗 Posit Cloud Access</h3>
+                    <p>Your coding environment is ready! Access R and Python tools, save your projects, and collaborate with teammates.</p>
+                    <button class="btn-primary">Launch Posit Cloud</button>
+                </div>
+                
+                <div class="resource-card">
+                    <h3>📚 Learning Library</h3>
+                    <p>Curated resources for every skill level - from absolute beginner to advanced topics.</p>
+                    <ul style="margin-top: 15px; text-align: left;">
+                        <li>Interactive R tutorials</li>
+                        <li>Statistics explainer videos</li>
+                        <li>Real-world dataset collection</li>
+                        <li>Career pathway guides</li>
+                    </ul>
+                </div>
+                
+                <div class="resource-card">
+                    <h3>🛠️ Tools & Templates</h3>
+                    <p>Ready-to-use templates, code snippets, and project starters to help you succeed.</p>
+                    <ul style="margin-top: 15px; text-align: left;">
+                        <li>Survey design templates</li>
+                        <li>Visualization code libraries</li>
+                        <li>Presentation templates</li>
+                        <li>Project planning worksheets</li>
+                    </ul>
+                </div>
+                
+                <div class="resource-card">
+                    <h3>🌐 Community Data Sources</h3>
+                    <p>Explore local and national datasets relevant to your community projects.</p>
+                    <ul style="margin-top: 15px; text-align: left;">
+                        <li>Census & demographic data</li>
+                        <li>Environmental monitoring</li>
+                        <li>Education statistics</li>
+                        <li>Public health information</li>
+                    </ul>
+                </div>
+                
+                <div class="resource-card">
+                    <h3>👥 Mentor Network</h3>
+                    <p>Connect with UCI students, graduate researchers, and faculty mentors who are here to support your journey.</p>
+                    <button class="btn-primary">Meet Your Mentors</button>
+                </div>
+                
+                <div class="resource-card">
+                    <h3>🎓 College & Career Prep</h3>
+                    <p>Learn about STEM pathways, college applications, scholarships, and career opportunities in data science.</p>
+                    <ul style="margin-top: 15px; text-align: left;">
+                        <li>UCI campus tour opportunities</li>
+                        <li>Scholarship information</li>
+                        <li>Internship programs</li>
+                        <li>Professional networking events</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <!-- Team Building Section -->
+        <div id="teambuilding" class="content-section">
+            <h2 style="text-align: center; color: white; margin-bottom: 30px;">🤝 Building Strong Connections</h2>
+            <div class="team-building">
+                <div class="team-activity">
+                    <div style="font-size: 3rem; margin-bottom: 15px;">🎯</div>
+                    <h3>Data Scavenger Hunt</h3>
+                    <p>Teams compete to find the most interesting statistics about each other's communities. Build friendships while learning!</p>
+                </div>
+                
+                <div class="team-activity">
+                    <div style="font-size: 3rem; margin-bottom: 15px;">🎨</div>
+                    <h3>Visualization Olympics</h3>
+                    <p>Friendly competition to create the most creative, informative, or beautiful data visualization. Everyone wins prizes!</p>
+                </div>
+                
+                <div class="team-activity">
+                    <div style="font-size: 3rem; margin-bottom: 15px;">🍕</div>
+                    <h3>Pizza & Problems</h3>
+                    <p>Monthly virtual pizza parties where we tackle fun estimation problems together and get to know each other better.</p>
+                </div>
+                
+                <div class="team-activity">
+                    <div style="font-size: 3rem; margin-bottom: 15px;">🏆</div>
+                    <h3>Peer Recognition</h3>
+                    <p>Celebrate each other's achievements! Nominate teammates for weekly spotlights and build a culture of support.</p>
+                </div>
+                
+                <div class="team-activity">
+                    <div style="font-size: 3rem; margin-bottom: 15px;">🎤</div>
+                    <h3>Show & Tell Sessions</h3>
+                    <p>Share your projects, get feedback, and learn from each other's unique approaches to solving problems.</p>
+                </div>
+                
+                <div class="team-activity">
+                    <div style="font-size: 3rem; margin-bottom: 15px;">🌟</div>
+                    <h3>Mentor Match-ups</h3>
+                    <p>Get paired with UCI students who share your interests. Build mentoring relationships that extend beyond the program.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        function showSection(sectionId) {
+            // Hide all sections
+            const sections = document.querySelectorAll('.content-section');
+            sections.forEach(section => {
+                section.classList.remove('active');
+            });
+            
+            // Remove active class from all tabs
+            const tabs = document.querySelectorAll('.nav-tab');
+            tabs.forEach(tab => {
+                tab.classList.remove('active');
+            });
+            
+            // Show selected section
+            document.getElementById(sectionId).classList.add('active');
+            
+            // Add active class to clicked tab
+            event.target.classList.add('active');
+        }
+    </script>
+</body>
+</html>
